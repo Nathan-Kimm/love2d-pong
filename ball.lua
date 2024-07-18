@@ -1,3 +1,5 @@
+local playerScore = 0
+local opponentScore = 0
 Ball = {}
 
 function Ball:load()
@@ -13,9 +15,10 @@ end
 function Ball:update(dt)
     Ball:move(dt)
     Ball:collision()
+    Ball:updateScore()
 end
 
-function Ball:move(dt)
+function Ball:move(dt)  
     self.x = self.x + self.xVelocity * dt
     self.y = self.y + self.yVelocity * dt
 end
@@ -43,6 +46,22 @@ function Ball:collision()
     elseif self.y + self.height > love.graphics.getHeight() then
         self.y = love.graphics.getHeight() - self.height
         self.yVelocity = -self.yVelocity
+    end
+end
+
+function Ball:updateScore()
+    if self.x < 0 then
+        opponentScore = opponentScore + 1
+        self.x = love.graphics.getWidth() / 2
+        self.y = love.graphics.getHeight() / 2
+        self.xVelocity = self.speed
+        self.yVelocity = 0
+    elseif self.x + self.width > love.graphics.getWidth() then
+        playerScore = playerScore + 1
+        self.x = love.graphics.getWidth() / 2
+        self.y = love.graphics.getHeight() / 2
+        self.xVelocity = -self.speed
+        self.yVelocity = 0
     end
 end
 
