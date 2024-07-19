@@ -31,8 +31,8 @@ end
 
 function drawScore()
     love.graphics.setFont(font)
-    love.graphics.print("Player: " .. Score.player, love.graphics.getWidth()/4, 50)
-    love.graphics.print("Computer: " .. Score.computer, love.graphics.getWidth() * 3 / 4, 50)
+    love.graphics.print("Player: " .. Score.player, 250, 0)
+    love.graphics.print("Computer: " .. Score.computer, 850, 0)
 end
 
 function checkCollisions(a, b)
