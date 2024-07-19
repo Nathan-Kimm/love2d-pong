@@ -1,23 +1,38 @@
-require("player")
-require("ball")
-require("opponent")
+require "player"
+require "ball"
+require "opponent"
+require "background"
 
 function love.load()
+    Background:load()
     Player:load()
     Ball:load()
     Opponent:load()
+
+    Score = {player = 0, computer = 0}
+    font = love.graphics.newFont(30)
 end
 
 function love.update(dt)
+    Background:update(dt)
     Player:update(dt)
     Ball:update(dt)
     Opponent:update(dt)
 end
 
 function love.draw()
+    --Background needs to first be drawn so it doesnt overlap other elements
+    Background:draw()
     Player:draw()
     Ball:draw()
     Opponent:draw()
+    drawScore()
+end
+
+function drawScore()
+    love.graphics.setFont(font)
+    love.graphics.print("Player: " .. Score.player, love.graphics.getWidth()/4, 50)
+    love.graphics.print("Computer: " .. Score.computer, love.graphics.getWidth() * 3 / 4, 50)
 end
 
 function checkCollisions(a, b)

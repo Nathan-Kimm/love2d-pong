@@ -1,21 +1,19 @@
-local playerScore = 0
-local opponentScore = 0
 Ball = {}
 
 function Ball:load()
     self.x = love.graphics.getWidth() / 2
     self.y = love.graphics.getHeight() / 2
-    self.width = 25
-    self.height = 25
+    self.sprite = love.graphics.newImage("assets/ball.png")
+    self.width = self.sprite:getWidth()
+    self.height = self.sprite:getHeight()
     self.speed = 200
     self.xVelocity = -self.speed
     self.yVelocity = 0
 end
 
 function Ball:update(dt)
-    Ball:move(dt)
-    Ball:collision()
-    Ball:updateScore()
+    self:move(dt)
+    self:collision()
 end
 
 function Ball:move(dt)  
@@ -24,6 +22,13 @@ function Ball:move(dt)
 end
 
 function Ball:collision()
+    self:playerCollision()
+    self:opponentCollision()
+    self:boundaryCollision()
+    self:updateScore()
+end
+
+function Ball:playerCollision()
     if checkCollisions(self, Player) then
         self.xVelocity = self.speed
         local middleBall = self.y + self.height / 2
@@ -31,7 +36,9 @@ function Ball:collision()
         local collisionPosition = middleBall - middlePlayer
         self.yVelocity = collisionPosition * 5
     end
+end
 
+function Ball:opponentCollision()
     if checkCollisions(self, Opponent) then
         self.xVelocity = -self.speed
         local middleBall = self.y + self.height / 2
@@ -39,7 +46,9 @@ function Ball:collision()
         local collisionPosition = middleBall - middleOpponent
         self.yVelocity = collisionPosition * 5
     end
+end
 
+function Ball:boundaryCollision()
     if self.y < 0 then
         self.y = 0
         self.yVelocity = -self.yVelocity
@@ -51,20 +60,21 @@ end
 
 function Ball:updateScore()
     if self.x < 0 then
-        opponentScore = opponentScore + 1
-        self.x = love.graphics.getWidth() / 2
-        self.y = love.graphics.getHeight() / 2
-        self.xVelocity = self.speed
-        self.yVelocity = 0
+        self:resetPosition(1)
+        Score.computer = Score.computer + 1
     elseif self.x + self.width > love.graphics.getWidth() then
-        playerScore = playerScore + 1
-        self.x = love.graphics.getWidth() / 2
-        self.y = love.graphics.getHeight() / 2
-        self.xVelocity = -self.speed
-        self.yVelocity = 0
+        self:resetPosition(-1)
+        Score.player = Score.player + 1
     end
 end
 
+function Ball:resetPosition(direction)
+    self.x = love.graphics.getWidth() / 2
+    self.y = love.graphics.getHeight() / 2
+    self.xVelocity = self.speed * direction
+    self.yVelocity = 0
+end
+
 function Ball:draw()
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+    love.graphics.draw(self.sprite, self.x, self.y)
 end

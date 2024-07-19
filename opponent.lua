@@ -1,8 +1,9 @@
 Opponent = {}
 
 function Opponent:load()
-    self.width = 20
-    self.height = 100
+    self.sprite = love.graphics.newImage("assets/Computer.png")
+    self.width = self.sprite:getWidth()
+    self.height = self.sprite:getHeight()
     self.x = love.graphics.getWidth() - self.width - 50
     self.y = love.graphics.getHeight() / 2 - self.height / 2
     self.speed = 600
@@ -30,5 +31,5 @@ function Opponent:trackTarget()
 end
  
 function Opponent:draw()
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+    love.graphics.draw(self.sprite, self.x, self.y)
 end
